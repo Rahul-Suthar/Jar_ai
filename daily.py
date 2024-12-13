@@ -1,7 +1,7 @@
 Tabs = {
     'google' : "https://google.com",
-    'youtube' : "https://youtube.com",
-    'github' : "https://youtube.com",
+    'youtube' : "https://www.youtube.com",
+    'github' : "https://github.com",
     'chatgpt' : "https://chatgpt.com",
     'render' : "https://render.com",
     'stackoverflow' : "https://stackoverflow.com",
