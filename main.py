@@ -1,7 +1,7 @@
 import speech_recognition as sr
 import webbrowser
 import pyttsx3
-import daily
+import json
 import requests
 import google.generativeai as genai
 import os
@@ -15,6 +15,14 @@ genapi = os.getenv("GenAPI_KEY")
 r = sr.Recognizer()
 engine = pyttsx3.init()
 
+def load_data(file):
+    with open(file, 'r') as f:
+        return json.load(f)
+    
+Tabs = load_data('tabs.json')
+Songs = load_data('songs.json')
+Solves = load_data('solves.json')
+
 def speak(text):
     engine.say(text)
     engine.runAndWait()
@@ -22,32 +30,34 @@ def speak(text):
 def aiProcess(cmmd):
     genai.configure(api_key=genapi)
     model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(cmmd)
-
-    return response.text
+    try :
+        response = model.generate_content(cmmd)
+        return response.text
+    except Exception as e:
+        return f'Error from AI: {e}'
 
 def processCmd(c):
     cm = c.lower()
     if cm.startswith("open"):
         tab = cm.split(' ')[1]
-        if tab in daily.Tabs:
-            link = daily.Tabs[tab]
+        if tab in Tabs:
+            link = Tabs[tab]
             webbrowser.open(link)
             speak(f'opening {tab}')
         else:
-            speak("Unable to find {tab}")
+            speak(f"Unable to find {tab}")
     elif cm.startswith("play"):
         song = cm.split(' ')[1]
-        if song in daily.Songs:
-            link =  daily.Songs[song]
+        if song in Songs:
+            link = Songs[song]
             webbrowser.open(link)
             speak(f'playing {song}')
         else:
-            speak("Unable to find {song}")
+            speak(f"Unable to find {song}")
     elif cm.startswith("do"):
         solve = cm.split(' ')[1]
-        if solve in daily.Solves:
-            link = daily.Solves[solve]
+        if solve in Solves:
+            link = Solves[solve]
             webbrowser.open(link)
             speak(f'Solving {solve}')
         else:
@@ -72,7 +82,7 @@ def start():
         try:
             with sr.Microphone() as source:
                 print("listening......")
-                audio = r.listen(source, timeout=2, phrase_time_limit=2)
+                audio = r.listen(source, timeout=3, phrase_time_limit=4)
             print("recognizing.......")
             word = r.recognize_google(audio)
             print(f"You said: {word}")
@@ -82,11 +92,15 @@ def start():
                     print("Jarvis Activated.")
                     audio = r.listen(source)
                     cmd = r.recognize_google(audio)
+                    
+                    if cmd.lower() in ['exit', 'stop', 'quit', 'packup']:
+                        speak('Shutting down. Goodbye!')
+                        break
 
                     processCmd(cmd)
             
         except Exception as e:
-            print(f"Error , {e}")
+            print(f"Error occured : {e}")
 
 if __name__ == "__main__":
     start()

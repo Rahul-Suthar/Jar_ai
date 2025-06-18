@@ -1,19 +1,27 @@
 # Jar AI
 
-Jar AI is a voice-controlled personal assistant built with Python, leveraging Speech Recognition and Text-to-Speech capabilities. Jar AI can process simple commands to open tabs, play songs, and more, making your daily tasks more efficient.
+Jar AI is a voice-controlled personal assistant built with Python. It leverages speech recognition, text-to-speech, browser automation, and generative AI to help you with quick tasks like opening websites, playing music, fetching news, and answering general queries—all hands-free.
 
 ## Features
 - **Voice Command Recognition**: Uses `speech_recognition` to listen to and process user commands.
 - **Browser Automation**: Opens specified tabs or plays songs using `webbrowser`.
 - **Text-to-Speech**: Provides voice feedback using `pyttsx3`.
 - **Customizable Commands**: Easily extend the functionality with new commands.
+- **Dynamic Data Loading**: load commands from external JSON file
+- **News Fetching**: Retrieves news from a specified source.
+- **AI-Powered Responses**: using Google's Gemini API for open-ended questions
+- **Error Handling**: Robust error handling to ensure smooth operation.
+- **Graceful Shutdown**: shutdown with voice-triggered exit commands
+
 
 ## Technologies Used
-- Python
+- Python 3.x
 - `speech_recognition` for processing voice inputs.
 - `pyttsx3` for text-to-speech output.
 - `webbrowser` for automating browser actions.
-- Custom `daily` module for predefined tabs and songs.
+- `google.generativeai`
+- `json` for loading commands from a file.
+- `dotenv`
 
 ## Installation
 1. Clone the repository:
@@ -47,6 +55,8 @@ Jar AI is a voice-controlled personal assistant built with Python, leveraging Sp
 2. Speak a command such as:
    - "Open YouTube"
    - "Play SongName"
+   - "Do leetcode"
+   - "Tell me a joke"
 
 3. Jar AI will respond to your voice command and perform the requested action.
 
@@ -55,14 +65,16 @@ Jar AI is a voice-controlled personal assistant built with Python, leveraging Sp
 - **Playing Songs**: Say `"Play SongName"`. Jar AI will look up the song in the predefined list and play it.
 
 ## Customization
-- Add your own tabs or songs in the `daily.py` file. For example:
+- Add your own tabs or songs in the respective json files. For example:
    ```python
-   Tabs = {
+   **tabs.json**
+   {
        "youtube": "https://www.youtube.com",
        "github": "https://github.com"
    }
 
-   Songs = {
+   **songs.json**
+   {
        "despacito": "<song_link>"
    }
    ```
